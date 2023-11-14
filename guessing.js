@@ -1,7 +1,14 @@
+let guesses = 6;
+
+let userGames = 0;
+let userGuesses = 0;
+let userWins = 0;
+let userList = []
+let userStreak = 0;
 
 function check(guess, answer) {
     let out = [];
-    
+    userGuesses += 1;
     Array.from(guess).forEach((e, i) => {
         
         if(answer[i] == guess[i]) {
@@ -35,25 +42,35 @@ getRandomWord((e) => {
     answer = e;
     console.log(e);
 });
+function restart() {
+    let guessbox = document.getElementById("guess_box");
+    let textbox = document.getElementById("input_text");
+    textbox.value = "";
+    userList = [];
+    guesses = 6;
+    // console.log("found", guessbox);
+    guessbox.innerHTML = "";
+    getRandomWord((e) => {
+        answer = e;
+        console.log(e);
+    });
+    updateStats();
+}
 document.getElementById("restart_game").addEventListener("click", () => {
-        let guessbox = document.getElementById("guess_box");
-        let textbox = document.getElementById("input_text");
-        textbox.value = "";
-        // console.log("found", guessbox);
-        guessbox.innerHTML = "";
-        getRandomWord((e) => {
-            answer = e;
-            console.log(e);
-        });
-
+    userStreak = 0;
+    userGuesses -= 6-guesses;
+    userGames += 1;
+    restart();
 });
+
 document.getElementById('submit_button').addEventListener("click", () => {
         let textbox = document.getElementById("input_text");
         let guessbox = document.getElementById("guess_box");
         
         // console.log(textbox.value);
         // console.log(textbox.value.match(/^[a-z]+$/i));
-        if(!textbox.value.match(/^[a-z]+$/i) || guessbox.children.length > 5) {
+        
+        if(!textbox.value.match(/^[a-z]+$/i)) {
             return;
         }
         let guess = document.createElement("div");
@@ -64,6 +81,8 @@ document.getElementById('submit_button').addEventListener("click", () => {
         
         let k = check(textbox.value.toLowerCase(), answer.toLowerCase());
         let correct = 0;
+        userList.push(textbox.value.toLowerCase());
+        guesses -= 1;
         k.forEach((e, i) => {
 
             let letter = document.createElement("div",);
@@ -96,12 +115,148 @@ document.getElementById('submit_button').addEventListener("click", () => {
             guess.appendChild(letter);}
             );
         
-        ;
         if(correct == answer.length & answer.length == textbox.value.length ) {
-            console.log('You got it right!');
+            // console.log('You got it right!');
+            userWins += 1;
+            userStreak +=1;
+            userGames += 1;
+            alert("You win!");
+            updateStats();
+            restart();
+            return;
+            
         }
+        
+        if(guesses <= 0 ) {
+            userStreak = 0;
+            userGames += 1;
+            guessbox.appendChild(guess);
+            updateStats();
+            textbox.value="";
+            alert("You Lost ;-(");
+            restart()
+            return;
+            
+        }
+        
+        updateStats();
         guessbox.appendChild(guess);
         textbox.value="";
-        
     }
     );
+
+//history and local storage 
+function save() {
+    // var userGames = document.getElementById("games").value;
+    localStorage.setItem("myGames", userGames);
+    // var userGuesses = document.getElementById("guesses").value;
+    localStorage.setItem("myGuesses", userGuesses);
+    // var userWins = document.getElementById("wins").value;
+    localStorage.setItem("myWins", userWins);
+    // var userStreak = document.getElementById("streak").value;
+    localStorage.setItem("myStreak", userStreak);
+    // var userList = document.getElementById("guess_list").value;
+    localStorage.setItem("myList", JSON.stringify(userList));
+
+  }
+
+  function load() {
+    // console.log("LOADED");
+    if(localStorage) {
+        console.log(localStorage);
+        temp = localStorage.getItem("myGames")
+        if(!isNaN(temp)) {
+            console.log("loaded my games");
+            userGames = parseInt(temp);
+        } 
+        else {
+            userGames = 0;
+        }
+        // document.getElementById("games").value = userGames;
+        temp = localStorage.getItem("myGuesses")
+        if(!isNaN(temp)) {
+            userGuesses = parseInt(temp);
+        }
+        else {
+            userGuesses = 0;
+        }
+        // document.getElementById("guesses").value = userGuesses;
+        temp = parseInt(localStorage.getItem("myWins"));
+
+        if(!isNaN(temp)) {
+            userWins = parseInt(temp);
+        }
+        else {
+            userWins = 0;
+        }
+        // document.getElementById("wins").value = userWins;
+        temp = parseInt(localStorage.getItem("myStreak"));
+        if(!isNaN(temp)) {
+            userStreak = parseInt(temp);
+        }
+        else {
+            userStreak = 0;
+        }
+        
+        // document.getElementById("streak").value = userStreak;
+        if(localStorage.getItem("myList") == "") {
+            userList = [];
+        }
+        else {
+            userList = JSON.parse(localStorage.getItem("myList"));
+            
+        }
+        
+        // document.getElementById("guess_list").value = userStreak;
+        
+    }
+    else {
+        userGames = 0; 
+        userGuesses = 0;
+        userWins = 0;
+        userList = [];
+        userStreak = 0;
+    }
+
+    updateStats();
+    
+  }
+function updateStats() {
+    console.log(userGames,userGuesses,userWins,userStreak, userGuesses/userGames);
+    // lnprint("Games Played:")
+    document.getElementById("games").innerHTML="Games Played: " + userGames;
+    document.getElementById("guesses").innerHTML="Total Guesses: " + userGuesses;
+    // lnprint("Guesses per Game Rate:")
+    
+    // lnprint("Total Wins:")
+    document.getElementById("wins").innerHTML="Wins: " + userWins;
+    // lnprint("Win Streak:")
+    document.getElementById("streak").innerHTML="Win Streak: " + userStreak;
+    var rate = (userGuesses/userGames);
+    if(rate == Infinity || isNaN(rate)) {
+        console.log("HDUWAI")
+        rate = 0;
+    }
+    console.log("rate: ", rate);
+    document.getElementById("rate").innerHTML="Average Guesses per Game: " + rate;
+    save(); 
+    
+}
+
+
+document.addEventListener("DOMContentLoaded", (e) => load());
+
+document.getElementById('clear_history').addEventListener("click", () => {
+    
+
+    userGames = 0; 
+    userGuesses = 0;
+    userWins = 0;
+    userList = [];
+    userStreak = 0;
+    localStorage.clear();
+    restart();
+    updateStats();
+    console.log(userGames,userGuesses,userWins,userStreak, userGuesses/userGames);
+    }
+    )

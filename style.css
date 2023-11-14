@@ -1,0 +1,31 @@
+
+.letter {
+    width:50px;
+    height:50px;
+    line-height:50px;
+    display:inline-block;
+    text-align: center;
+    font-size: large;
+    margin-right: 5px;
+    background-color:grey;
+    color:white;
+    font-weight: bold;
+}
+
+.wrongspot {
+    background-color:rgb(224, 195, 32);
+}
+.correct {
+    background-color:rgb(122, 202, 30);
+}
+
+.toolong {
+    
+    background-color:rgb(224, 155, 213);
+}
+.wronglength {
+    opacity: 55%;
+}
+.tooshort {
+    background-color:rgb(158, 158, 158);
+}

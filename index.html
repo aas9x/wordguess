@@ -11,32 +11,45 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
-<<<<<<< HEAD
-    <div class="container d-flex p-2 justify-content-center " style="height:100%;">
-=======
-    <div class="">
-        <button class="btn btn-primary md-auto" id="new_button">START NEW GAME</button>
-    </div>
-    <div class="container d-flex p-2 h-75 justify-content-center">
->>>>>>> 1a1584f1a0409e96563d3cd5254b95795286f445
-        <div id="guess_box" class="container">
-
+<body class="" data-bs-theme="dark">
+    <div class="container  w-100 " >
+        <div id="guess_box" class="container col ms-auto vh-50">
         </div>
-        <div class ="container col d-flex p-4" style="position:absolute;bottom: 0;">
-            <div class="">
-                <button class="btn btn-primary md-auto" id="submit_button">ENTER</button>
-            </div>
+        <div class="col d-block">
+            <div class="container col d-flex p-4">
+                <div class="">
+                    <button class="btn btn-success md-auto" id="submit_button">ENTER</button>
+                </div>
 
-            <div class="col-4 ">
-                <input id="input_text" class="form-control form-control-large text-center md-auto" type="text">
+                <div class="col-4 ">
+                    <input id="input_text" class="form-control form-control-large text-center md-auto" type="text">
 
+                </div>
+                <div class="">
+                    <button class="btn btn-info md-auto" id="restart_game">NEW GAME</button>
+                </div>
+                <div class="">
+                    <button class="btn btn-primary md-auto" id="clear_history">CLEAR HISTORY</button>
+                </div>
             </div>
-            <div class="">
-                <button class="btn btn-primary md-auto" id="restart_game">RESET</button>
+            <div class="container text-light">
+                <div id="games">
+                    
+                </div>
+                <div id="guesses">
+
+                </div>
+                <div id="wins">
+
+                </div>
+                <div id="streak">
+                    
+                </div>
+                <div id="rate">
+                    <!---- guesses over games total --->
+                </div>
             </div>
         </div>
-
     </div>
 </body>
 

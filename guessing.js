@@ -4,10 +4,6 @@ function check(guess, answer) {
     
     Array.from(guess).forEach((e, i) => {
         
-        // if (i > answer.length - 1) {
-        //     out.push(3);
-        //     return;
-        // }
         if(answer[i] == guess[i]) {
             out.push(2);
             return;
@@ -29,24 +25,47 @@ function check(guess, answer) {
         out.push(0);
         
     });
-    // if(guess.length < answer.length) {
-    //     // guess += " ".repeat(answer.length-guess.length);
-    //     for(let i = 0; i < answer.length-guess.length; i++) {
-    //         out.push(-1);
-    //     }
-    // }
-    console.log(out);
+    
+    // console.log(out);
     return out;
 }
+let answer = "";
+let playing = false;
+getRandomWord((e) => {
+    answer = e;
+    console.log(e);
+});
+document.getElementById("restart_game").addEventListener("click", () => {
+        let guessbox = document.getElementById("guess_box");
+        let textbox = document.getElementById("input_text");
+        textbox.value = "";
+        // console.log("found", guessbox);
+        guessbox.innerHTML = "";
+        getRandomWord((e) => {
+            answer = e;
+            console.log(e);
+        });
+
+});
 document.getElementById('submit_button').addEventListener("click", () => {
         let textbox = document.getElementById("input_text");
         let guessbox = document.getElementById("guess_box");
-        console.log(textbox.value);
+        
+        // console.log(textbox.value);
+        // console.log(textbox.value.match(/^[a-z]+$/i));
+        if(!textbox.value.match(/^[a-z]+$/i) || guessbox.children.length > 5) {
+            return;
+        }
         let guess = document.createElement("div");
         guess.setAttribute("class","g-3 container p-1");
-        let answer = "farts"
-        let k = check(textbox.value, answer);
+        
+        
+        // console.log(answer);
+        
+        let k = check(textbox.value.toLowerCase(), answer.toLowerCase());
+        let correct = 0;
         k.forEach((e, i) => {
+
             let letter = document.createElement("div",);
             let char = "-"; 
             if(i < textbox.value.length) {
@@ -61,6 +80,7 @@ document.getElementById('submit_button').addEventListener("click", () => {
             }
             if(e == 2){
                 c += "correct";
+                correct += 1;
             }
             if(e == 1){
                 c += "wrongspot";
@@ -77,7 +97,11 @@ document.getElementById('submit_button').addEventListener("click", () => {
             );
         
         ;
+        if(correct == answer.length & answer.length == textbox.value.length ) {
+            console.log('You got it right!');
+        }
         guessbox.appendChild(guess);
         textbox.value="";
+        
     }
     );

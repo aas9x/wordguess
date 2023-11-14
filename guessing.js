@@ -1,3 +1,4 @@
+var answer_variable = "new"
 
 function check(guess, answer) {
     let out = [];
@@ -38,13 +39,25 @@ function check(guess, answer) {
     console.log(out);
     return out;
 }
+
+//creating function to edit word
+
+function newgame(newWord){
+    answer_variable = newWord;
+}
+
+document.getElementById('new_button').addEventListener("click", () => {
+    getRandomWord(newgame);
+
+}
+)
 document.getElementById('submit_button').addEventListener("click", () => {
         let textbox = document.getElementById("input_text");
         let guessbox = document.getElementById("guess_box");
         console.log(textbox.value);
         let guess = document.createElement("div");
         guess.setAttribute("class","g-3 container p-1");
-        let answer = "farts"
+        let answer = answer_variable
         let k = check(textbox.value, answer);
         k.forEach((e, i) => {
             let letter = document.createElement("div",);
@@ -81,3 +94,36 @@ document.getElementById('submit_button').addEventListener("click", () => {
         textbox.value="";
     }
     );
+
+//functions provided to us
+function queryWord() {
+    return new Promise( resolve => {
+            // instantiate the object
+            var ajax = new XMLHttpRequest();
+            // open the request
+            ajax.open("GET", "https://cs4640.cs.virginia.edu/api/wordleword.php", true);
+            // ask for a specific response
+            ajax.responseType = "text";
+            // send the request
+            ajax.send(null);
+            
+            // What happens if the load succeeds
+            ajax.addEventListener("load", function() {
+                // Return the word as the fulfillment of the promise 
+                if (this.status == 200) { // worked 
+                    resolve(this.response);
+                } else {
+                    console.log("When trying to get a new word, the server returned an HTTP error code.");
+                }
+            });
+            
+            // What happens on error
+            ajax.addEventListener("error", function() {
+                console.log("When trying to get a new word, the connection to the server failed.");
+            });
+    });
+}
+async function getRandomWord(callback) {
+    var newWord = await queryWord();
+    callback(newWord);
+}
